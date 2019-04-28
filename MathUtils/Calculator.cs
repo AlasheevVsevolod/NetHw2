@@ -6,35 +6,83 @@ using System.Threading.Tasks;
 
 namespace MathUtils
 {
-	public class Logger
+	public interface ILogger
+	{
+		void Log(string text);
+	}
+
+	public class Logger : ILogger
 	{
 		public void Log(string text)
-		{ 
+		{
+			//log to file
 		}
 	}
 
 	public class Calculator
 	{
-		public readonly Logger _logger;
+		public readonly ILogger _logger;
 
-		public Calculator(Logger logger)
+		public Calculator(ILogger logger)
 		{
 			_logger = logger;
 		}
 
 		public int Sum(int x, int y)
 		{
-			return x + y;
+			var result = x + y;
+			_logger.Log($"{x} + {y} = {result}");
+			return result;
 		}
 
 		public int Divide(int x, int y)
 		{
-			return x / y;
+			var result = x / y;
+			if (result > 10)
+				throw new Exception("Result is greater that 10");
+			else
+				_logger.Log($"{x} / {y} = {result}");
+			return result;
 		}
 
 		public int Subtract(int x, int y)
 		{
-			return x - y;
+			var result = x - y;
+			if (result > 10)
+				throw new Exception("Result is greater that 10");
+			else
+				_logger.Log($"{x} - {y} = {result}");
+			return result;
+		}
+
+		public int Multiply(int x, int y)
+		{
+			var result = x * y;
+			if (result > 10)
+				throw new Exception("Result is greater that 10");
+			else
+				_logger.Log($"{x} * {y} = {result}");
+			return result;
+		}
+
+		public int Exp(int x, int y)
+		{
+			var result = (int)Math.Pow(x, y);
+			if (result > 10)
+				throw new Exception("Result is greater that 10");
+			else
+				_logger.Log($"{x} ^ {y} = {result}");
+			return result;
+		}
+
+		public int Root(int x, int y)
+		{
+			var result = (int)Math.Pow(x, (double)1 / y);
+			if (result > 10)
+				throw new Exception("Result is greater that 10");
+			else
+				_logger.Log($"{y}th root of {x} = {result}");
+			return result;
 		}
 	}
 }

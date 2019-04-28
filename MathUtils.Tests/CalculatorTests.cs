@@ -16,10 +16,21 @@ namespace MathUtils.Tests
 		{
 			var mock = new Mock<ILogger>();
 
-			mock.Setup(o => o.Log(It.IsAny<string>())).Callback<string>(Console.WriteLine);
+			mock.Setup(o => o.Log(It.IsAny<string>())).Callback<string>(CheckLoggerCondition);
 			_logger = mock.Object;
 		}
+
+		public void CheckLoggerCondition(string text)
+		{
+			var tmpText = text.Substring(text.LastIndexOf('=') + 2);
+			if (!tmpText.StartsWith("-") && (tmpText.Length > 2 || (tmpText.Length == 2 && !tmpText.StartsWith("10"))))
+			{
+				throw new Exception("Result is greater that 10");
+			}
+			Console.WriteLine(text);
+		}
 		
+
 		//SumTestMethods
 		[Test]
 		[TestCase(2, 1, ExpectedResult = 3)]
@@ -32,7 +43,6 @@ namespace MathUtils.Tests
 
 		//DivideTestMethods
 		[Test]
-		//[ExpectedException(typeof(DivideByZeroException))]
 		public void TestDivideMethodDivideByZero()
 		{
 			var calc = new Calculator(_logger);
